@@ -19,7 +19,20 @@ export default class ProductDescriptionPage extends Component {
   }
 
   createBasket = () => {
-    this.props.history.push('/cart')
+    let headers = new Headers();
+    headers.set('Authorization', 'Basic ' + btoa('username:password'));
+    fetch("https://www.adidas.com/api/checkout/baskets", {
+      method: 'POST',
+      headers
+      //headers:{ 'Content-type':'application/json'}
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data)
+        //this.setState({ data })
+      })
+      .catch(console.log)
+    .then(() => this.props.history.push('/cart'))
   }
 
   render() {
