@@ -19,21 +19,67 @@ export default class ProductDescriptionPage extends Component {
   }
 
   createBasket = () => {
-    let headers = new Headers();
-    headers.set('Authorization', 'Basic ' + btoa('username:password'));
+
     fetch("https://www.adidas.com/api/checkout/baskets", {
-      method: 'POST',
-      headers
-      //headers:{ 'Content-type':'application/json'}
+      crossDomain: true,
+      method: 'POST'
     })
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data)
-        //this.setState({ data })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
       })
+      /* .then((data) => {
+       console.log(data)
+       this.setState({ data })
+     }) */
       .catch(console.log)
-    .then(() => this.props.history.push('/cart'))
+      //.then(() => this.props.history.push('/cart'))
   }
+
+  /* createBasket = () => {
+
+    const sendHttpRequest = (method, url, data) => {
+      const promise = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+
+        xhr.responseType = 'json';
+        xhr.withCredentials = true
+
+        if (data) {
+          xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          //xhr.setRequestHeader('mode', []);
+          
+        }
+
+        xhr.onload = () => {
+          if (xhr.status >= 400) {
+            reject(xhr.response);
+          } else {
+            resolve(xhr.response);
+          }
+        };
+
+        xhr.onerror = () => {
+          reject('Something went wrong!');
+        };
+
+        xhr.send(JSON.stringify(data));
+      });
+      return promise;
+    };
+
+    sendHttpRequest('POST', 'https://www.adidas.com/api/checkout/baskets')
+      .then(responseData => {
+        this.setState({
+          selectedProductSKU: responseData
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  } */
+  // id: selectedProductSKU
 
   render() {
     const { productAvailability, selectedProductSKU } = this.state;
