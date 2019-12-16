@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
 import productImage from '../../../Images/superstar_cloud_white.webp'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
-import SingleSelect from '../AuxiliaryComponents/SingleSelect'
+import SingleSelect from '../../AuxiliaryComponents/SingleSelect'
 
 const ProductSummary = styled.section`
   box-sizing: border-box;
@@ -60,8 +60,8 @@ export default class ProductSummaryBox extends Component {
                 <p>$80.00</p>
               </div>
               <p style={{ textOverflow: 'ellipsis' }}>Cloud White / Core Black / Cloud White</p>
-              <p className='addSpace'>Size: M 5 / W 6</p>
-              <p style={{ marginBottom: '10%' }}><strong>In Stock</strong></p>
+              <p className='addSpace'>{this.props.size}</p>
+              <p style={{ marginBottom: '10%' }}><strong>{this.props.stock}</strong></p>
               <SingleSelect options={[{ value: null, label: 1 }]} addSelected={this.addSelected} property={'selectedQuantity'} />
             </ProductAndPriceContainer>
             <IconContainer>
