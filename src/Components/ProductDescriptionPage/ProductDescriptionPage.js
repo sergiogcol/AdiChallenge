@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     box-sizing: border-box;
-    margin: 2%;
+    margin: 0;
     font-size: 16px;
     text-transform: uppercase;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -60,31 +60,10 @@ class ProductDescriptionPage extends Component {
     }
   }
 
-  /* createBasket = () => {
-    fetch("https://www.adidas.com/api/checkout/baskets", {
-      crossDomain: true,
-      method: 'POST'
-    })
-      .then(res => { res.json()})
-      .then((data) => {
-       this.setState({ productAvailability: data })
-     })
-      .catch(console.log)
-      .then(() => this.props.history.push('/cart'))
-  } */
-
   createBasket = (numberOfItemsOptions) => {
     const { selectedProductSKU, productId, selectedSize, availabilityStatus, price, selectedProductQuantity, productName, productVersion } = this.state;
     this.props.addProduct({ selectedProductSKU, productId, numberOfItemsOptions, selectedSize, availabilityStatus, price, selectedProductQuantity, productName, productVersion })
     this.props.history.push('/cart')
-    /* this.setState({
-      addProductToBasket: {
-        'Content-Type': 'application/json',
-        'body': [{
-          'productId': productAvailability.id,
-        }]
-      }
-    }) */
   }
 
   render() {
@@ -112,17 +91,19 @@ class ProductDescriptionPage extends Component {
 
     return (
       <React.Fragment>
-        <GlobalStyle />
-        <ButtonContainer >
-          <SingleSelect options={sizesOptions} addSelected={this.addSelected} property={'selectedProductSKU'} sendSize />
-          <SingleSelect options={selectedProductSKU === null ? initialQuantityLabel : numberOfItemsOptions} addSelected={this.addSelected} property={'selectedProductQuantity'} />
-          <CheckoutButton onClick={() => this.createBasket(numberOfItemsOptions)}>
-            <CheckoutSpan>Add To Cart</CheckoutSpan>
-            <div style={{ fontSize: '20px' }}>
-              <FontAwesomeIcon icon={faLongArrowAltRight} />
-            </div>
-          </CheckoutButton>
-        </ButtonContainer>
+        <div style={{ margin: '0 2%' }}>
+          <GlobalStyle />
+          <ButtonContainer >
+            <SingleSelect options={sizesOptions} addSelected={this.addSelected} property={'selectedProductSKU'} sendSize />
+            <SingleSelect options={selectedProductSKU === null ? initialQuantityLabel : numberOfItemsOptions} addSelected={this.addSelected} property={'selectedProductQuantity'} />
+            <CheckoutButton onClick={() => this.createBasket(numberOfItemsOptions)}>
+              <CheckoutSpan>Add To Cart</CheckoutSpan>
+              <div style={{ fontSize: '20px' }}>
+                <FontAwesomeIcon icon={faLongArrowAltRight} />
+              </div>
+            </CheckoutButton>
+          </ButtonContainer>
+        </div>
       </React.Fragment>
     );
   }

@@ -32,28 +32,26 @@ export default class SingleSelect extends Component {
     state = {}
 
     addSelected = (value) => {
-        if(this.props.sendSize){
-            let selectedSize = this.props.options.filter( item => item.value === value )[0].label;
+        if (this.props.sendSize) {
+            let selectedSize = this.props.options.filter(item => item.value === value)[0].label;
             this.props.addSelected(this.props.property, value, selectedSize)
         } else {
             this.props.addSelected(this.props.property, value)
-        }    
+        }
         this.setState({
             [this.props.property]: value
         })
     }
     render() {
-        let { options } = this.props
+        let { options, selectedOption } = this.props
+
         return (
             <SelectContainer>
-            <Select onChange={(event) => 
-            {console.log(event.target)
-            this.addSelected(event.target.value)}}>
-                {options.map((option, i) => <option key={i} value={option.value} label={option.label}>{option.label}</option> )}
-            </Select>
-            <FontAwesomeIcon icon={faChevronDown} />
+                <Select value={selectedOption} onChange={(event) => { this.addSelected(event.target.value) }}>
+                    {options.map((option, i) => <option key={i} value={option.value} label={option.label} >{option.label}</option>)}
+                </Select>
+                <FontAwesomeIcon icon={faChevronDown} />
             </SelectContainer>
         )
     }
 }
-//<FontAwesomeIcon icon={faChevronDown} />

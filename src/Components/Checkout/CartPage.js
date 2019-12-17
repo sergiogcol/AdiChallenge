@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux'
 
-
 const GlobalStyle = createGlobalStyle`
   html{
     height: 100vh;
@@ -16,13 +15,12 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     box-sizing: border-box;
-    margin: 2%;
+    margin: 0;
     font-size: 16px;
     text-transform: uppercase;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   }
 `
-
 const PageTitleContainer = styled.header`
   display: flex;
   justify-content: space-between;
@@ -138,7 +136,6 @@ class CartPage extends Component {
   }
 
   render() {
-    console.log(this.props.productsData)
     let quantities = this.props.productsData.map(product => parseInt(product.selectedProductQuantity))
     let totalQuantities = quantities.length !== 0 ? quantities.reduce((total, item) => total + item) : null
     let pricePerQuantities = this.props.productsData.map(product => product.price * parseInt(product.selectedProductQuantity))
@@ -147,40 +144,42 @@ class CartPage extends Component {
     let itemOrItems = totalQuantities > 1 ? 'items' : 'item'
     return (
       <React.Fragment>
-        <GlobalStyle />
-        {totalQuantities > 1 ?
-          <div>
-            <PageTitleContainer>
-              <PageTitle>your bag</PageTitle>
-              <Link className='continueShopping'>continue shopping</Link>
-            </PageTitleContainer>
-            <TotalTitle>
-              <em>total </em>
-              {`:(${totalQuantities} ${itemOrItems})`}
-              <strong>{` $${total}`}</strong>
-            </TotalTitle>
-            <ContentContainer>
-              <div>
-                {this.props.productsData.map(product => <ProductSummaryBox key={product.selectedProductSKU} id={product.productId} productName={product.productName} productVersion={product.productVersion} size={product.selectedSize} stock={product.availabilityStatus} price={product.price} />)}
-                <CheckoutButtons />
-              </div>
-              <OrderSummaryBox itemQuantity={totalQuantities} price={total} delivery={'free'} salesTax={'-'} total={total} />
-            </ContentContainer>
-          </div>
-          :
-          <div>
-          <PageTitleContainer className='emptyBag'>
-            <PageTitle>Your Bag is Empty</PageTitle>
-            <p>Once you add something to your bag, it will appear here. Ready to get started?</p>
-          </PageTitleContainer>
-          <CheckoutButton onClick={()=>this.returnHome()}>
-            <CheckoutSpan>get started</CheckoutSpan>
-            <div style={{ fontSize: '20px' }}>
-              <FontAwesomeIcon icon={faLongArrowAltRight} />
+        <div style={{ margin: '0 2%' }}>
+          <GlobalStyle />
+          {totalQuantities > 1 ?
+            <div>
+              <PageTitleContainer>
+                <PageTitle>your bag</PageTitle>
+                <Link className='continueShopping'>continue shopping</Link>
+              </PageTitleContainer>
+              <TotalTitle>
+                <em>total </em>
+                {`:(${totalQuantities} ${itemOrItems})`}
+                <strong>{` $${total}`}</strong>
+              </TotalTitle>
+              <ContentContainer>
+                <div>
+                  {this.props.productsData.map((product, i) => <ProductSummaryBox key={i} selectedProductSKU={product.selectedProductSKU} id={product.productId} productName={product.productName} productVersion={product.productVersion} size={product.selectedSize} stock={product.availabilityStatus} price={product.price} numberOfItemsOptions={product.numberOfItemsOptions} selectedProductQuantity={product.selectedProductQuantity} />)}
+                  <CheckoutButtons />
+                </div>
+                <OrderSummaryBox itemQuantity={totalQuantities} price={total} delivery={'free'} salesTax={'-'} total={total} />
+              </ContentContainer>
             </div>
-          </CheckoutButton>
-          </div>
-        }
+            :
+            <div>
+              <PageTitleContainer className='emptyBag'>
+                <PageTitle>Your Bag is Empty</PageTitle>
+                <p>Once you add something to your bag, it will appear here. Ready to get started?</p>
+              </PageTitleContainer>
+              <CheckoutButton onClick={() => this.returnHome()}>
+                <CheckoutSpan>get started</CheckoutSpan>
+                <div style={{ fontSize: '20px' }}>
+                  <FontAwesomeIcon icon={faLongArrowAltRight} />
+                </div>
+              </CheckoutButton>
+            </div>
+          }
+        </div>
       </React.Fragment>
     );
   }
@@ -191,5 +190,11 @@ const mapStateToProps = (state) => {
     productsData: state.productsData
   }
 }
+
+/* const mapDispatchToProps = (dispatch) => {
+  return {
+    updateProduct: (data) => { dispatch({ type: 'UPDATE_PRODUCT', data }) }
+  }
+} */
 
 export default connect(mapStateToProps)(CartPage)
