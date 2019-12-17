@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 import productImage from '../../../Images/superstar_cloud_white.webp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import SingleSelect from '../../AuxiliaryComponents/SingleSelect'
+import { connect } from 'react-redux'
 
 const ProductSummary = styled.section`
   box-sizing: border-box;
@@ -48,7 +49,14 @@ const IconContainer = styled.div`
   }
 `
 
-export default class ProductSummaryBox extends Component {
+class ProductSummaryBox extends Component {
+   /*  state = {
+      productId: this.props.key
+    }
+ */
+    deleteProduct = () => {
+      this.props.removeProduct(this.props.id)
+    } 
     render() {
         return (
             <ProductSummary>
@@ -56,16 +64,16 @@ export default class ProductSummaryBox extends Component {
           <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%', width: '100%' }}>
             <ProductAndPriceContainer>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <p>Superstar Shoes</p>
-                <p>$80.00</p>
+                <p>{this.props.productName}</p>
+                <p>{`$${this.props.price}`}</p>
               </div>
-              <p style={{ textOverflow: 'ellipsis' }}>Cloud White / Core Black / Cloud White</p>
+              <p style={{ textOverflow: 'ellipsis' }}>{this.props.productVersion}</p>
               <p className='addSpace'>{this.props.size}</p>
-              <p style={{ marginBottom: '10%' }}><strong>{this.props.stock}</strong></p>
+              <p style={{ marginBottom: '10%' }}><strong>{this.props.stock.replace("_", " ")}</strong></p>
               <SingleSelect options={[{ value: null, label: 1 }]} addSelected={this.addSelected} property={'selectedQuantity'} />
             </ProductAndPriceContainer>
             <IconContainer>
-              <button>
+              <button onClick={() => this.deleteProduct()}>
                 <FontAwesomeIcon icon={faTimes} />
               </button>
               <button>
@@ -77,3 +85,14 @@ export default class ProductSummaryBox extends Component {
         )
     }
 }
+
+const mapStateToProps = () => {
+  return {}
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeProduct: (id) => { dispatch({type: 'REMOVE_PRODUCT', id})}
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ProductSummaryBox)

@@ -35,7 +35,7 @@ export default function OrderSummaryBox(props) {
                 <h5 style={{ fontSize: '18px', lineHeight: '16px', margin: '0', marginBottom: '20px' }}>ORDER SUMMARY</h5>
                 <OrderSummaryData>
                   <p>{`${props.itemQuantity} item`}</p>
-                  <p>{props.price}</p>
+                  <p>{`$${props.total}`}</p>
                 </OrderSummaryData>
                 <OrderSummaryData>
                   <p>delivery</p>
@@ -47,7 +47,7 @@ export default function OrderSummaryBox(props) {
                 </OrderSummaryData>
                 <OrderSummaryData className='total'>
                   <p>total</p>
-                  <p>{props.total}</p>
+                  <p>{`$${props.total}`}</p>
                 </OrderSummaryData>
               </div>
             </OrderSummary>
