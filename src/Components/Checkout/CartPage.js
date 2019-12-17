@@ -4,6 +4,7 @@ import { createGlobalStyle } from 'styled-components'
 import ProductSummaryBox from './CartComponents/ProductSummaryBox'
 import CheckoutButtons from './CartComponents/CheckoutButtons'
 import OrderSummaryBox from './CartComponents/OrderSummaryBox'
+import { connect } from 'react-redux'
 
 
 const GlobalStyle = createGlobalStyle`
@@ -61,14 +62,20 @@ const ContentContainer = styled.section`
   width:100%;
 `
 
-export default class CartPage extends Component {
-
+class CartPage extends Component {
+  
   addSelected = (property, value) => {
     this.setState({
       [property]: value
     })
   }
+
   render() {
+    let totalQuantities = this.props.productsData.map( product => parseInt(product.selectedProductQuantity)).reduce( (total, item) => total+item)
+    let pricePerQuantities = this.props.productsData.map( product => product.price*parseInt(product.selectedProductQuantity))
+    let total = pricePerQuantities.reduce( (total, item) => total+item)
+   
+    let itemOrItems = totalQuantities>1 ? 'items' : 'item'
     return (
       <React.Fragment>
         <GlobalStyle />
@@ -76,19 +83,30 @@ export default class CartPage extends Component {
           <PageTitle>your bag</PageTitle>
           <Link className='continueShopping'>continue shopping</Link>
         </PageTitleContainer>
+        {this.props.productsData.map( product => {
+          
+        })}
         <TotalTitle>
           <em>total </em>
-          :(1 item)
-          <strong> $80</strong>
+          {`:(${totalQuantities} ${itemOrItems})`}
+          <strong>{` $${total}`}</strong>
         </TotalTitle>
         <ContentContainer>
           <div>
             <ProductSummaryBox size={'Size: M 5 / W 6'} stock={'in stock'} />
             <CheckoutButtons />
           </div>
-          <OrderSummaryBox itemQuantity={1} price={'$80.00'} delivery={'free'} salesTax={'-'} total={'$80.00'}/>
+          <OrderSummaryBox itemQuantity={totalQuantities} price={total} delivery={'free'} salesTax={'-'} total={total}/>
         </ContentContainer>
       </React.Fragment>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    productsData: state.productsData
+  }
+}
+
+export default connect(mapStateToProps)(CartPage)
