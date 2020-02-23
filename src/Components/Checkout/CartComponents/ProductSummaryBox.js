@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import productImage from '../../../Images/superstar_cloud_white.webp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import SingleSelect from '../../AuxiliaryComponents/SingleSelect'
-import { connect } from 'react-redux'
+import { ProductDataContext } from '../../../Contexts/ProductDataContext'
+/* import { connect } from 'react-redux' */
 
 const ProductSummary = styled.section`
   box-sizing: border-box;
@@ -49,58 +50,61 @@ const IconContainer = styled.div`
   }
 `
 
-class ProductSummaryBox extends Component {
+const ProductSummaryBox = (props) => {
 
-  addSelected = (property, value) => {
-    let { selectedProductSKU, id, productName, productVersion, size, stock, price, numberOfItemsOptions } = this.props;
-    this.props.updateProduct({
-      availabilityStatus: stock,
-      numberOfItemsOptions: numberOfItemsOptions,
-      price: price,
-      productId: id,
-      productName: productName,
-      productVersion: productVersion,
-      selectedProductQuantity: value,
-      selectedProductSKU: selectedProductSKU,
-      selectedSize: size
+  const { dispatch } = useContext(ProductDataContext);
+
+  const addSelected = (property, value) => {
+    let { selectedProductSKU, id, productName, productVersion, size, stock, price, numberOfItemsOptions } = props;
+    dispatch({
+      type: 'UPDATE_PRODUCT', data: {
+        availabilityStatus: stock,
+        numberOfItemsOptions: numberOfItemsOptions,
+        price: price,
+        productId: id,
+        productName: productName,
+        productVersion: productVersion,
+        selectedProductQuantity: value,
+        selectedProductSKU: selectedProductSKU,
+        selectedSize: size
+      }
     })
-
   }
 
-  deleteProduct = () => {
-    this.props.removeProduct(this.props.id)
+  const deleteProduct = () => {
+    dispatch({ type: 'REMOVE_PRODUCT', id: props.id })
   }
 
-  render() {
-    return (
-      <ProductSummary>
-        <img src={productImage} alt='Adidas Superstar Shoes Cloud White Color' height='240px' width='240px'></img>
-        <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%', width: '100%' }}>
-          <ProductAndPriceContainer>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>{this.props.productName}</p>
-              <p>{`$${this.props.price}`}</p>
-            </div>
-            <p style={{ textOverflow: 'ellipsis' }}>{this.props.productVersion}</p>
-            <p className='addSpace'>{this.props.size}</p>
-            <p style={{ marginBottom: '10%' }}><strong>{this.props.stock.replace("_", " ")}</strong></p>
-            <SingleSelect options={this.props.numberOfItemsOptions} addSelected={this.addSelected} property={'selectedQuantity'} selectedOption={this.props.selectedProductQuantity}/>
-          </ProductAndPriceContainer>
-          <IconContainer>
-            <button onClick={() => this.deleteProduct()}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-            <button>
-              <FontAwesomeIcon icon={faHeart} />
-            </button>
-          </IconContainer>
-        </div>
-      </ProductSummary>
-    )
-  }
+  return (
+    <ProductSummary>
+      <img src={productImage} alt='Adidas Superstar Shoes Cloud White Color' height='240px' width='240px'></img>
+      <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%', width: '100%' }}>
+        <ProductAndPriceContainer>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>{props.productName}</p>
+            <p>{`$${props.price}`}</p>
+          </div>
+          <p style={{ textOverflow: 'ellipsis' }}>{props.productVersion}</p>
+          <p className='addSpace'>{props.size}</p>
+          <p style={{ marginBottom: '10%' }}><strong>{props.stock.replace("_", " ")}</strong></p>
+          <SingleSelect options={props.numberOfItemsOptions} addSelected={addSelected} property={'selectedQuantity'} selectedOption={props.selectedProductQuantity} />
+        </ProductAndPriceContainer>
+        <IconContainer>
+          <button onClick={() => deleteProduct()}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <button>
+            <FontAwesomeIcon icon={faHeart} />
+          </button>
+        </IconContainer>
+      </div>
+    </ProductSummary>
+  )
 }
 
-const mapStateToProps = () => {
+export default ProductSummaryBox
+
+/* const mapStateToProps = () => {
   return {}
 }
 
@@ -109,5 +113,6 @@ const mapDispatchToProps = (dispatch) => {
     removeProduct: (id) => { dispatch({ type: 'REMOVE_PRODUCT', id }) },
     updateProduct: (data) => { dispatch({ type: 'UPDATE_PRODUCT', data }) }
   }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(ProductSummaryBox)
+} */
+/*
+export default connect(mapStateToProps, mapDispatchToProps)(ProductSummaryBox) */

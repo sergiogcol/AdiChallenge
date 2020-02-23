@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { createGlobalStyle } from 'styled-components'
 import ProductSummaryBox from './CartComponents/ProductSummaryBox'
@@ -6,8 +6,8 @@ import CheckoutButtons from './CartComponents/CheckoutButtons'
 import OrderSummaryBox from './CartComponents/OrderSummaryBox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons'
-import { connect } from 'react-redux'
-
+/* import { connect } from 'react-redux' */
+import { ProductDataContext } from '../../Contexts/ProductDataContext'
 const GlobalStyle = createGlobalStyle`
   html{
     height: 100vh;
@@ -124,7 +124,7 @@ export const CheckoutSpan = styled.span`
   flex: 1 1 auto;
 `
 
-function CartPage (props) {
+const CartPage = (props) => {
 
   /* const [selectedItem, addSelectedItem] = useState({})
 
@@ -134,63 +134,65 @@ function CartPage (props) {
       [property]: value
     })
   } */
+  const { productData } = useContext(ProductDataContext);
+
   const returnHome = () => {
     props.history.push('/')
   }
 
-    let quantities = props.productsData.map(product => parseInt(product.selectedProductQuantity))
-    let totalQuantities = quantities.length !== 0 ? quantities.reduce((total, item) => total + item) : null
-    let pricePerQuantities = props.productsData.map(product => product.price * parseInt(product.selectedProductQuantity))
-    let total = pricePerQuantities.length !== 0 ? pricePerQuantities.reduce((total, item) => total + item) : null
+  let quantities = productData.map(product => parseInt(product.selectedProductQuantity))
+  let totalQuantities = quantities.length !== 0 ? quantities.reduce((total, item) => total + item) : null
+  let pricePerQuantities = productData.map(product => product.price * parseInt(product.selectedProductQuantity))
+  let total = pricePerQuantities.length !== 0 ? pricePerQuantities.reduce((total, item) => total + item) : null
 
-    let itemOrItems = totalQuantities > 1 ? 'items' : 'item'
-    return (
-      <React.Fragment>
-        <div style={{ margin: '0 2%' }}>
-          <GlobalStyle />
-          {totalQuantities > 1 ?
-            <div>
-              <PageTitleContainer>
-                <PageTitle>your bag</PageTitle>
-                <Link className='continueShopping'>continue shopping</Link>
-              </PageTitleContainer>
-              <TotalTitle>
-                <em>total </em>
-                {`:(${totalQuantities} ${itemOrItems})`}
-                <strong>{` $${total}`}</strong>
-              </TotalTitle>
-              <ContentContainer>
-                <div>
-                  {props.productsData.map((product, i) => <ProductSummaryBox key={i} selectedProductSKU={product.selectedProductSKU} id={product.productId} productName={product.productName} productVersion={product.productVersion} size={product.selectedSize} stock={product.availabilityStatus} price={product.price} numberOfItemsOptions={product.numberOfItemsOptions} selectedProductQuantity={product.selectedProductQuantity} />)}
-                  <CheckoutButtons />
-                </div>
-                <OrderSummaryBox itemQuantity={totalQuantities} price={total} delivery={'free'} salesTax={'-'} total={total} />
-              </ContentContainer>
-            </div>
-            :
-            <div>
-              <PageTitleContainer className='emptyBag'>
-                <PageTitle>Your Bag is Empty</PageTitle>
-                <p>Once you add something to your bag, it will appear here. Ready to get started?</p>
-              </PageTitleContainer>
-              <CheckoutButton onClick={() => returnHome()}>
-                <CheckoutSpan>get started</CheckoutSpan>
-                <div style={{ fontSize: '20px' }}>
-                  <FontAwesomeIcon icon={faLongArrowAltRight} />
-                </div>
-              </CheckoutButton>
-            </div>
-          }
-        </div>
-      </React.Fragment>
-    );
+  let itemOrItems = totalQuantities > 1 ? 'items' : 'item'
+  return (
+    <React.Fragment>
+      <div style={{ margin: '0 2%' }}>
+        <GlobalStyle />
+        {totalQuantities > 1 ?
+          <div>
+            <PageTitleContainer>
+              <PageTitle>your bag</PageTitle>
+              <Link className='continueShopping'>continue shopping</Link>
+            </PageTitleContainer>
+            <TotalTitle>
+              <em>total </em>
+              {`:(${totalQuantities} ${itemOrItems})`}
+              <strong>{` $${total}`}</strong>
+            </TotalTitle>
+            <ContentContainer>
+              <div>
+                {productData.map((product, i) => <ProductSummaryBox key={i} selectedProductSKU={product.selectedProductSKU} id={product.productId} productName={product.productName} productVersion={product.productVersion} size={product.selectedSize} stock={product.availabilityStatus} price={product.price} numberOfItemsOptions={product.numberOfItemsOptions} selectedProductQuantity={product.selectedProductQuantity} />)}
+                <CheckoutButtons />
+              </div>
+              <OrderSummaryBox itemQuantity={totalQuantities} price={total} delivery={'free'} salesTax={'-'} total={total} />
+            </ContentContainer>
+          </div>
+          :
+          <div>
+            <PageTitleContainer className='emptyBag'>
+              <PageTitle>Your Bag is Empty</PageTitle>
+              <p>Once you add something to your bag, it will appear here. Ready to get started?</p>
+            </PageTitleContainer>
+            <CheckoutButton onClick={() => returnHome()}>
+              <CheckoutSpan>get started</CheckoutSpan>
+              <div style={{ fontSize: '20px' }}>
+                <FontAwesomeIcon icon={faLongArrowAltRight} />
+              </div>
+            </CheckoutButton>
+          </div>
+        }
+      </div>
+    </React.Fragment>
+  );
 }
 
-const mapStateToProps = (state) => {
+/* const mapStateToProps = (state) => {
   return {
-    productsData: state.productsData
+    productData: state.productData
   }
-}
+} */
 
 /* const mapDispatchToProps = (dispatch) => {
   return {
@@ -198,4 +200,5 @@ const mapStateToProps = (state) => {
   }
 } */
 
-export default connect(mapStateToProps)(CartPage)
+/* export default connect(mapStateToProps)(CartPage) */
+export default CartPage

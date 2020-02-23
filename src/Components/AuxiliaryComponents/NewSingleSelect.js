@@ -33,9 +33,10 @@ const Select = styled.select`
     const addSelected = (value) => {
         if (props.sendSize) {
             let selectedSize = props.options.filter(item => item.value === value)[0].label;
-            props.addSelected(props.property, value, selectedSize)
+            props.addSelected(selectedSize)
+            props.addSelectedSKU(value)
         } else {
-            props.addSelected(props.property, value)
+            props.addSelected(value)
         }
         addSelectedItem({
             ...selectedItem,
